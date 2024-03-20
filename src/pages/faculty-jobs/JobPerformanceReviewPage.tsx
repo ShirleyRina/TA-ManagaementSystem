@@ -29,7 +29,7 @@ const PerformanceReview: React.FC = () => {
     Name: 'John Doe',
     SMUid: 'TA01',
     Course: 'Cs01',
-    JobId: 'JOB123',
+    Time: '2024	Spring',
   };
 
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
@@ -183,7 +183,7 @@ const PerformanceReview: React.FC = () => {
           <span style={{ fontWeight: 'bold' }}>Course:</span> {taInfo.Course}
         </Typography>
         <Typography variant="subtitle1">
-          <span style={{ fontWeight: 'bold' }}>Job ID:</span> {taInfo.JobId}
+          <span style={{ fontWeight: 'bold' }}>Job ID:</span> {taInfo.Time}
         </Typography>
       </Box>
     </Container>
