@@ -1,181 +1,193 @@
-import React, { useContext, useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import {
   Container,
   Typography,
-  Box,
+  Slider,
   TextField,
   Button,
-  Dialog,
-  DialogContent,
-  DialogActions,
-  Table,
-  TableBody,
-  TableCell,
-  TableContainer,
-  TableHead,
-  TableRow,
-  Paper,
-  IconButton,
+  Box,
+  Grid,
 } from '@mui/material';
-import EditIcon from '@mui/icons-material/Edit';
-import api from '../../services/faculty-job'; // Adjust this import based on your actual API file
-import { UserContext } from '../../provider';
 
-const EvaluatePerformance: React.FC = () => {
-  // Type definition for performance evaluations
-  type Performance = {
-    id: number;
-    employeeName: string;
-    jobId: number;
-    performanceMetrics: string;
-    evaluation: string; // Textual evaluation
+const marks = [
+  { value: 0, label: '0: Completely Absent' },
+  { value: 2, label: '2' },
+  { value: 4, label: '4' },
+  { value: 6, label: '6' },
+  { value: 8, label: '8' },
+  { value: 10, label: '10: Always Punctual' },
+];
+
+const PerformanceReview: React.FC = () => {
+  const [attendance, setAttendance] = useState<number>(5);
+  const [timeliness, setTimeliness] = useState<number>(5);
+  const [professorRating, setProfessorRating] = useState<number>(5);
+  const [comments, setComments] = useState<string>('');
+
+  // 示例数据，你可以根据需要从props或state中获取这些信息
+  const taInfo = {
+    Name: 'John Doe',
+    SMUid: 'TA01',
+    Course: 'Cs01',
+    JobId: 'JOB123',
   };
 
-  const userContext = useContext(UserContext);
-  if (!userContext) {
-    return <div>Loading...</div>;
-  }
-
-  const [performances, setPerformances] = useState<Performance[]>([]);
-  const [currentPerformance, setCurrentPerformance] =
-    useState<Performance | null>(null);
-  const [openDialog, setOpenDialog] = useState(false);
-
-  useEffect(() => {
-    // Replace with the actual API call
-    api.getPerformances().then((res) => {
-      if (res !== undefined) {
-        setPerformances(res);
-      }
-    });
-  }, []);
-
-  const handleEditClick = (performance: Performance) => {
-    setCurrentPerformance(performance);
-    setOpenDialog(true);
-  };
-
-  const handleCloseDialog = () => {
-    setOpenDialog(false);
-  };
-
-  const handleSaveClick = () => {
-    if (currentPerformance) {
-      api
-        .updatePerformance(currentPerformance.id, currentPerformance)
-        .then((res) => {
-          if (res !== undefined) {
-            setPerformances(
-              performances.map((perf) =>
-                perf.id === currentPerformance.id ? res : perf
-              )
-            );
-          }
-          setOpenDialog(false);
-        })
-        .catch((error) => {
-          console.error('Error updating performance:', error);
-          alert('Failed to update performance.');
-        });
-    }
-  };
-
-  const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const { name, value } = event.target;
-    setCurrentPerformance({
-      ...currentPerformance!,
-      [name]: value,
-    });
+  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    // 这里可以添加提交评价的逻辑
+    console.log('Attendance:', attendance);
+    console.log('Timeliness:', timeliness);
+    console.log('Professor Rating:', professorRating);
+    console.log('Comments:', comments);
   };
 
   return (
-    <Container>
-      <Box sx={{ my: 4 }}>
-        <Typography variant="h4" gutterBottom component="div">
-          Performance Evaluations
-        </Typography>
-        <TableContainer component={Paper} elevation={3}>
-          <Table sx={{ minWidth: 650 }} aria-label="simple table">
-            <TableHead>
-              <TableRow>
-                <TableCell>Employee Name</TableCell>
-                <TableCell>Job ID</TableCell>
-                <TableCell>Performance Metrics</TableCell>
-                <TableCell>Evaluation</TableCell>
-                <TableCell align="right">Actions</TableCell>
-              </TableRow>
-            </TableHead>
-            <TableBody>
-              {performances.map((performance) => (
-                <TableRow
-                  key={performance.id}
-                  sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
-                >
-                  <TableCell component="th" scope="row">
-                    {performance.employeeName}
-                  </TableCell>
-                  <TableCell>{performance.jobId}</TableCell>
-                  <TableCell>{performance.performanceMetrics}</TableCell>
-                  <TableCell>{performance.evaluation}</TableCell>
-                  <TableCell align="right">
-                    <IconButton
-                      color="primary"
-                      onClick={() => handleEditClick(performance)}
-                    >
-                      <EditIcon />
-                    </IconButton>
-                  </TableCell>
-                </TableRow>
-              ))}
-            </TableBody>
-          </Table>
-        </TableContainer>
-      </Box>
+    <Container maxWidth="md" sx={{ mt: 4 }}>
+      <Typography variant="h4" align="center" gutterBottom>
+        TA Performance Review
+      </Typography>
+      <form onSubmit={handleSubmit}>
+        <Box mb={6} />
+        <Box sx={{ mb: 4 }}>
+          <Grid container spacing={4}>
+            <Grid item xs={12}>
+              <Box mb={4}>
+                <Grid container alignItems="center">
+                  <Grid item xs={12} sm={4}>
+                    <Typography variant="h6" gutterBottom>
+                      Attendance
+                    </Typography>
+                  </Grid>
+                  <Grid item xs={12} sm={8}>
+                    <Slider
+                      value={attendance}
+                      onChange={(event, value) =>
+                        setAttendance(value as number)
+                      }
+                      aria-labelledby="attendance-slider"
+                      step={1}
+                      marks={marks}
+                      min={0}
+                      max={10}
+                      valueLabelDisplay="on"
+                    />
+                  </Grid>
+                </Grid>
+              </Box>
+            </Grid>
+            <Grid item xs={12}>
+              <Box mb={4}>
+                <Grid container alignItems="center">
+                  <Grid item xs={12} sm={4}>
+                    <Typography variant="h6" gutterBottom>
+                      Timeliness
+                    </Typography>
+                  </Grid>
+                  <Grid item xs={12} sm={8}>
+                    <Slider
+                      value={timeliness}
+                      onChange={(event, value) =>
+                        setTimeliness(value as number)
+                      }
+                      aria-labelledby="timeliness-slider"
+                      step={1}
+                      marks={marks}
+                      min={0}
+                      max={10}
+                      valueLabelDisplay="on"
+                    />
+                  </Grid>
+                </Grid>
+              </Box>
+            </Grid>
+            <Grid item xs={12}>
+              <Box mb={4}>
+                <Grid container alignItems="center">
+                  <Grid item xs={12} sm={4}>
+                    <Typography variant="h6" gutterBottom>
+                      Professor Rating
+                    </Typography>
+                  </Grid>
+                  <Grid item xs={12} sm={8}>
+                    <Slider
+                      value={professorRating}
+                      onChange={(event, value) =>
+                        setProfessorRating(value as number)
+                      }
+                      aria-labelledby="professor-rating-slider"
+                      step={1}
+                      marks={marks}
+                      min={0}
+                      max={10}
+                      valueLabelDisplay="on"
+                    />
+                  </Grid>
+                </Grid>
+              </Box>
+            </Grid>
+            <Grid item xs={12}>
+              <Box mb={4}>
+                <Grid container alignItems="center">
+                  <Grid item xs={12} sm={4}>
+                    <Typography variant="h6" gutterBottom>
+                      Comments
+                    </Typography>
+                  </Grid>
+                  <Grid item xs={12} sm={8}>
+                    <TextField
+                      value={comments}
+                      onChange={(e) => setComments(e.target.value)}
+                      variant="outlined"
+                      fullWidth
+                      multiline
+                      rows={4}
+                      sx={{ mb: 4 }}
+                    />
+                  </Grid>
+                </Grid>
+              </Box>
+            </Grid>
+          </Grid>
+        </Box>
+        <Box sx={{ display: 'flex', justifyContent: 'center' }}>
+          <Button
+            type="submit"
+            variant="contained"
+            color="primary"
+            size="large"
+          >
+            Submit
+          </Button>
+        </Box>
+      </form>
 
-      <Dialog open={openDialog} onClose={handleCloseDialog}>
-        <DialogContent>
-          <TextField
-            autoFocus
-            margin="dense"
-            id="employeeName"
-            label="Employee Name"
-            type="text"
-            fullWidth
-            variant="standard"
-            name="employeeName"
-            value={currentPerformance?.employeeName}
-            onChange={handleInputChange}
-          />
-          <TextField
-            margin="dense"
-            id="performanceMetrics"
-            label="Performance Metrics"
-            type="text"
-            fullWidth
-            variant="standard"
-            name="performanceMetrics"
-            value={currentPerformance?.performanceMetrics}
-            onChange={handleInputChange}
-          />
-          <TextField
-            margin="dense"
-            id="evaluation"
-            label="Evaluation"
-            type="text"
-            fullWidth
-            variant="standard"
-            name="evaluation"
-            value={currentPerformance?.evaluation}
-            onChange={handleInputChange}
-          />
-        </DialogContent>
-        <DialogActions>
-          <Button onClick={handleCloseDialog}>Cancel</Button>
-          <Button onClick={handleSaveClick}>Save</Button>
-        </DialogActions>
-      </Dialog>
+      {/* TA信息部分 */}
+      <Box
+        sx={{
+          position: 'absolute',
+          top: 0,
+          right: 0,
+          p: 2,
+          display: 'flex',
+          flexDirection: 'column',
+          alignItems: 'flex-end',
+        }}
+      >
+        <Typography variant="subtitle1">
+          <span style={{ fontWeight: 'bold' }}>Name:</span> {taInfo.Name}
+        </Typography>
+        <Typography variant="subtitle1">
+          <span style={{ fontWeight: 'bold' }}>SMU ID:</span> {taInfo.SMUid}
+        </Typography>
+        <Typography variant="subtitle1">
+          <span style={{ fontWeight: 'bold' }}>Course:</span> {taInfo.Course}
+        </Typography>
+        <Typography variant="subtitle1">
+          <span style={{ fontWeight: 'bold' }}>Job ID:</span> {taInfo.JobId}
+        </Typography>
+      </Box>
     </Container>
   );
 };
 
-export default EvaluatePerformance;
+export default PerformanceReview;
