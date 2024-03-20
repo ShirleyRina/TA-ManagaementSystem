@@ -19,9 +19,10 @@ const marks = [
 ];
 
 const PerformanceReview: React.FC = () => {
-  const [attendance, setAttendance] = useState<number>(5);
-  const [timeliness, setTimeliness] = useState<number>(5);
-  const [professorRating, setProfessorRating] = useState<number>(5);
+  const [teachingSkill, setTeachingSkill] = useState<number>(5);
+  const [mentoringSkill, setMentoringSkill] = useState<number>(5);
+  const [effectiveCommunication, setEffectiveCommunication] =
+    useState<number>(5);
   const [comments, setComments] = useState<string>('');
 
   // 示例数据，你可以根据需要从props或state中获取这些信息
@@ -35,9 +36,9 @@ const PerformanceReview: React.FC = () => {
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     // 这里可以添加提交评价的逻辑
-    console.log('Attendance:', attendance);
-    console.log('Timeliness:', timeliness);
-    console.log('Professor Rating:', professorRating);
+    console.log('Teaching Skill:', teachingSkill);
+    console.log('Mentoring Skill:', mentoringSkill);
+    console.log('Effective Communication:', effectiveCommunication);
     console.log('Comments:', comments);
   };
 
@@ -55,16 +56,16 @@ const PerformanceReview: React.FC = () => {
                 <Grid container alignItems="center">
                   <Grid item xs={12} sm={4}>
                     <Typography variant="h6" gutterBottom>
-                      Attendance
+                      Teaching Skill
                     </Typography>
                   </Grid>
                   <Grid item xs={12} sm={8}>
                     <Slider
-                      value={attendance}
+                      value={teachingSkill}
                       onChange={(event, value) =>
-                        setAttendance(value as number)
+                        setTeachingSkill(value as number)
                       }
-                      aria-labelledby="attendance-slider"
+                      aria-labelledby="teaching-skill-slider"
                       step={1}
                       marks={marks}
                       min={0}
@@ -80,16 +81,16 @@ const PerformanceReview: React.FC = () => {
                 <Grid container alignItems="center">
                   <Grid item xs={12} sm={4}>
                     <Typography variant="h6" gutterBottom>
-                      Timeliness
+                      Mentoring Skill
                     </Typography>
                   </Grid>
                   <Grid item xs={12} sm={8}>
                     <Slider
-                      value={timeliness}
+                      value={mentoringSkill}
                       onChange={(event, value) =>
-                        setTimeliness(value as number)
+                        setMentoringSkill(value as number)
                       }
-                      aria-labelledby="timeliness-slider"
+                      aria-labelledby="mentoring-skill-slider"
                       step={1}
                       marks={marks}
                       min={0}
@@ -105,16 +106,16 @@ const PerformanceReview: React.FC = () => {
                 <Grid container alignItems="center">
                   <Grid item xs={12} sm={4}>
                     <Typography variant="h6" gutterBottom>
-                      Professor Rating
+                      Effective Communication
                     </Typography>
                   </Grid>
                   <Grid item xs={12} sm={8}>
                     <Slider
-                      value={professorRating}
+                      value={effectiveCommunication}
                       onChange={(event, value) =>
-                        setProfessorRating(value as number)
+                        setEffectiveCommunication(value as number)
                       }
-                      aria-labelledby="professor-rating-slider"
+                      aria-labelledby="effective-communication-slider"
                       step={1}
                       marks={marks}
                       min={0}
